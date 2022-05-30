@@ -119,10 +119,10 @@ fn get_key_by_index(_index: usize) -> String {
     if allkeys.len() <= _index {
         return "".to_string();
     }
-    return allkeys[_index].to_string();
+    allkeys[_index].to_string()
 }
 
-fn set_key(_keyindex: &String) {
+fn set_key(_keyindex: &str) {
     println!("{}", "Setting key".blue());
     println!("{}", "Saving key to file".blue());
     // write key to file
