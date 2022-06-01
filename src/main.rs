@@ -15,6 +15,7 @@ fn main() {
         )
         .subcommand(
             Command::new("key")
+                .subcommand_required(true)
                 .about("Key interaction")
                 .subcommand(
                     Command::new("gen").about("Generates a qkey").arg(
@@ -140,6 +141,7 @@ fn set_key(_keyindex: &str) {
 }
 fn list_keys(_debug: &bool) {
     create_config();
+    let mut index = 1;
     // Get the home dir
     #[allow(deprecated)]
     let home = env::home_dir().unwrap();    
@@ -153,6 +155,7 @@ fn list_keys(_debug: &bool) {
         let keyname = keyy.file_name().unwrap().to_str().unwrap();
         let keydata = fs::read_to_string(&keyy).expect("Error to read key");
         // Print the file name
-        println!("{} - {}", keyname.bright_yellow(), keydata.on_yellow());
+        println!("{}{}{} {} - {}", "[".bright_blue(), index, "]".bright_blue(), keyname.bright_yellow(), keydata.on_yellow());
+        index += 1;
     }
 }
