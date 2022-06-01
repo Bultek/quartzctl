@@ -15,6 +15,7 @@ fn main() {
         )
         .subcommand(
             Command::new("key")
+                .subcommand_required(true)
                 .about("Key interaction")
                 .subcommand(
                     Command::new("gen").about("Generates a qkey").arg(
