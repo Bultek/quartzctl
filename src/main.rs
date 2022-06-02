@@ -118,7 +118,8 @@ fn get_key_by_index(_index: usize) -> String {
         allkeys.push(keydata);
     }
     if allkeys.len() <= _index {
-        return "".to_string();
+        println!("{}", "Key index out of range".red());
+        std::process::exit(1);
     }
     allkeys[_index].to_string()
 }
@@ -127,8 +128,18 @@ fn set_key(_keyindex: &str) {
     println!("{}", "Setting key".blue());
     println!("{}", "Saving key to file".blue());
     // write key to file
-    let _kindex = _keyindex.parse::<usize>().unwrap() - 1;
-    let keydata = get_key_by_index(_kindex);
+    let _kindex = _keyindex.parse::<usize>();
+    let mut _index: usize = 0; 
+    match _kindex {
+        Ok(_kindex) => {
+            _index = _kindex -1;
+        }
+        Err(_) => {
+            panic!("Key index is not a number");
+        }
+    }
+    
+    let keydata = get_key_by_index(_index);
     create_config();
     #[allow(deprecated)]
     let home = env::home_dir().unwrap();    
