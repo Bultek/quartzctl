@@ -1,7 +1,7 @@
 use clap::*;
 use colored::*;
 use libquartz::*;
-use std::{fs,env,path};
+use std::{fs,env,path, io::Read};
 fn main() {
     let _matches = Command::new("Quartz control utility")
         .subcommand_required(true)
@@ -39,6 +39,9 @@ fn main() {
                 )
                 .subcommand(Command::new("list").about("List all keys")),
         )
+        .subcommand(
+            Command::new("servers").about("List all servers")
+        )
         .about("Libquartz based apps control utility")
         .get_matches();
         println!("{}", "Welcome to quartz control utility".green());
@@ -56,7 +59,57 @@ fn main() {
                 list_keys(&_debug);
             }
         }
+        if let Some(_subc) = _matches.subcommand_matches("servers") {
+            list();
+        }
 }
+
+fn list() {
+    let servers = get_servers();
+    let mut i = 0;
+    for server in servers.names {
+        println!("{}{}{} - {} ({})","[".bright_yellow(), i.to_string().bright_yellow(), "]".bright_yellow(), server.trim().bright_green(),&servers.urls[i].trim());
+        i += 1;
+    }
+}
+
+fn get_servers() -> ServerData {
+    create_config();
+    #[allow(deprecated)]
+    let home = env::home_dir().unwrap();
+    let srvpath = path::Path::new(&home)
+        .join(".config")
+        .join("libquartz")
+        .join("servers");
+    if fs::metadata(&srvpath).is_err() {
+        fs::create_dir_all(&srvpath).unwrap();
+    }
+    let mut servernames: Vec<String> = Vec::new();
+    let mut serverurls: Vec<String> = Vec::new();
+    for entry in fs::read_dir(&srvpath).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if path.is_file() {
+            let filename = path.file_name().unwrap().to_str().unwrap();
+            servernames.push(filename.to_string());
+            let mut file = fs::File::open(path).unwrap();
+            let mut contents = String::new();
+            file.read_to_string(&mut contents).unwrap();
+
+            serverurls.push(contents.to_string());
+        }
+    }
+    ServerData {
+        names: servernames,
+        urls: serverurls,
+    }
+}
+struct ServerData {
+    names: Vec<String>,
+    urls: Vec<String>,
+}
+
+
 fn gen_key(_keyname: &String) {
     println!("{}", "Generating key".blue());
     let _key = keytools::gen_key();
