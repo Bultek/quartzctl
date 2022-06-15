@@ -226,7 +226,8 @@ fn list_keys(_debug: &bool) {
 }
 
 
-#[cfg(windows)]
-fn enable_windows() {    
+
+fn enable_windows() {
+    #[cfg(windows)] 
     let _wincolorfix = colored::control::set_virtual_terminal(true);
 }
