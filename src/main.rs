@@ -3,7 +3,7 @@ use colored::*;
 use libquartz::*;
 use std::{fs,env,path, io::Read};
 fn main() {
-    let _wincolorfix = control::set_virtual_terminal(true);
+    enable_windows();
     let _matches = Command::new("Quartz control utility")
         .subcommand_required(true)
         .version("0.1")
@@ -223,4 +223,10 @@ fn list_keys(_debug: &bool) {
         println!("{}{}{} {} - {}", "[".bright_blue(), index, "]".bright_blue(), keyname.bright_yellow(), keydata.on_yellow());
         index += 1;
     }
+}
+
+
+#[cfg(windows)]
+fn enable_windows() {    
+    let _wincolorfix = colored::control::set_virtual_terminal(true);
 }
