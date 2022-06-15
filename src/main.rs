@@ -3,6 +3,7 @@ use colored::*;
 use libquartz::*;
 use std::{fs,env,path, io::Read};
 fn main() {
+    let _wincolorfix = control::set_virtual_terminal(true);
     let _matches = Command::new("Quartz control utility")
         .subcommand_required(true)
         .version("0.1")
@@ -45,14 +46,14 @@ fn main() {
         .about("Libquartz based apps control utility")
         .get_matches();
         println!("{}", "Welcome to quartz control utility".green());
-        let _debug = _matches.is_present("debug");
+        let _debug = ArgMatches::contains_id(&_matches, "debug");
         if let Some(subc) = _matches.subcommand_matches("key"){
             if let Some(subc2) = subc.subcommand_matches("gen") {
-                let keyname = subc2.value_of("keyname").unwrap().to_string();
+                let keyname = subc2.get_one::<String>("keyname").unwrap();
                 gen_key(&keyname);
             }
             if let Some(subc2) = subc.subcommand_matches("set") {
-                let keyindex = subc2.value_of("keyindex").unwrap().to_string();
+                let keyindex = subc2.get_one::<String>("keyindex").unwrap();
                 set_key(&keyindex);
             }
             if let Some(_subc) = subc.subcommand_matches("list") {

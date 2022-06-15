@@ -1,6 +1,6 @@
 [package]
 name = "quartzctl"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "libquartz based apps manager"
 license = "BSD-2-Clause"
@@ -13,6 +13,6 @@ categories = ["command-line-utilities"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-colored = "2.0"
+colored = "2"
 libquartz = "0"
-clap = "3.1"
+clap = "3.2"
